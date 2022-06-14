@@ -13,3 +13,5 @@ Structure and content of each folder:
     * RobotSimulator - simulation of the Lego Robot.
 5. ROS
     * Basics - has examples of cretion of basic pub/sub systems. 
+
+Big thanks to Professor Jason Hattrick-Simpers for guiding me throughout this summer! This would not be possible without him!
