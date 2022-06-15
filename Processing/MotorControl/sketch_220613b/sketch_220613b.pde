@@ -5,9 +5,16 @@ Serial port; //do not change
 ControlP5 cp5; //create ControlP5 object
 int motor = 0; // motor speed variable
 
+Slider slider;
+
 boolean button = false;
 boolean saved = true;
 
+// Variable to store text currently being typed
+String typing = "";
+
+// Variable to store saved text when return is hit
+String savedText = "";
 
 int x = 25;
 int y = 100;
@@ -29,6 +36,7 @@ boolean reset;
 JSONArray json;
 int jsonLen;
 
+
 void setup() {
   size(480, 270); 
   startTimer = new Timer(0);
@@ -43,12 +51,14 @@ void setup() {
 port = new Serial(this, "COM3", 9600); //connected arduino port
 cp5 = new ControlP5(this); //do not change
 
+
+
 //setting up a slider 
-Slider slider = cp5.addSlider("motor")
+slider = cp5.addSlider("motor")
 .setPosition(125, 20) //x and y upper left corner
 .setSize(50, 250) //(width, height)
 .setRange(0, 255) //slider range low,high
-.setValue(125) //start val
+.setValue(255) //start val
 .setColorBackground(color(0, 0, 255)) //top of slider color r,g,b
 .setColorForeground(color(0, 255, 0)) //botom of slider color r,g,b
 .setColorValue(color(255, 255, 255)) //vall color r,g,b
@@ -82,8 +92,9 @@ void draw() {
   }
   fill(175);
   rect(x,y,w,h);
-
-  //slider(motor);
+  text("Input: " + typing,300,190);
+  text("Saved text: " + savedText,300,230);
+  slider(motor);
 }
 
 
@@ -122,4 +133,19 @@ int checkJsonLength(){
     i++;
   }
 
+}
+
+void keyPressed() {
+  // If the return key is pressed, save the String and clear it
+  if (key == '\n' ) {
+    savedText = typing;
+    // A String can be cleared by setting it equal to ""
+    typing = ""; 
+    motor = int(savedText);
+    slider.setValue(int(savedText));
+  } else {
+    // Otherwise, concatenate the String
+    // Each character typed by the user is added to the end of the String variable.
+    typing = typing + key; 
+  }
 }
