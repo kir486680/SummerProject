@@ -417,47 +417,53 @@ class Board():
     def load_labwear(self, name, location, lotSize, taken)
     #fix this the following way https://stackoverflow.com/questions/5079609/methods-with-the-same-name-in-one-class-in-python
         if name == 'MetalHolder':
-            metalHolder = MetalHolder(location, lotSize, taken) # generate an empty array of 0 be default
+            metalHolder = self.MetalHolder(location, lotSize, taken) # generate an empty array of 0 be default
         if name == 'Beaker':
-            beaker = Beaker(size, location)
-
-class Beaker():
-    sizeOptions = [[30,40], [50,60]] #comes in as [height, radius]
-    def __init__(self, size, location):
-        self.size = self.sizeOptions[size]
-
-class MetalHolder():
-
+            beaker = self.Beaker(size, location)
     
-    def __init__(self, coordinates, taken, lotSize, numLots):
-        self.coordinates = coordinates # array of x and y coordiates of the spots in the holder
-        self.taken = taken # array of taken spots of the holder
-        self.lotSize = lotSize
-        self.numLots = numLots
-    def updateLot(self, idx, status=1):
-        taken[idx] = status
-    def status():
-        for x,status in zip(x for x,y in self.coordinates, self.taken)
-            print("The point with coordinates " + str(x) + " has status " + str(status))
-    def findFree():
-        for count, coord in enumerate(self.coordinates):
-            if not self.taken[count]:
-                x, y = coordinates
-                updateLot(count)
-                return x
-        break
-    def findTaken():
-        for count, coord in enumerate(self.coordinates):
-            if self.taken[count]:
-                x, y = coordinates
-                updateLot(count,0)
-                return x
-    def generateLocation(self, start):            
-        y = 0
-        x = start
-        for i in range(numLots):
-            x += self.lotSize
-            self.coordinates.append([x,y])
+
+    class Beaker():
+        sizeOptions = [[30,40], [50,60]] #comes in as [height, radius]
+        def __init__(self, size, location):
+            self.size = self.sizeOptions[size]
+            self.start = location
+            self.end = location +size
+        def changeSize(size):
+            self.size = self.sizeOptions[size]
+
+
+    class MetalHolder():
+
+        
+        def __init__(self, location, lotSize, taken):
+            self.coordinates = coordinates # array of x and y coordiates of the spots in the holder
+            self.taken = taken # array of taken spots of the holder
+            self.lotSize = lotSize
+            self.numLots = numLots
+        def updateLot(self, idx, status=1):
+            taken[idx] = status
+        def status():
+            for x,status in zip([x for x,y in self.coordinates], self.taken):
+                print("The point with coordinates " + str(x) + " has status " + str(status))
+        def findFree():
+            for count, coord in enumerate(self.coordinates):
+                if not self.taken[count]:
+                    x, y = coordinates
+                    updateLot(count)
+                    return x
+            return None
+        def findTaken():
+            for count, coord in enumerate(self.coordinates):
+                if self.taken[count]:
+                    x, y = coordinates
+                    updateLot(count,0)
+                    return x
+        def generateLocation(self, start):            
+            y = 0
+            x = start
+            for i in range(numLots):
+                x += self.lotSize
+                self.coordinates.append([x,y])
 
 
 
@@ -571,5 +577,8 @@ remote.connect()
 
 while remote.is_connected() is not None:
     print("yes")
+
+
+
 
 
