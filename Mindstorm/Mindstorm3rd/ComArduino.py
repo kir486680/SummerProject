@@ -56,118 +56,111 @@
 
 #=====================================
 
-def sendToArduino(sendStr):
-  ser.write(sendStr.encode('utf-8'))
-
-
-#======================================
-
-def recvFromArduino():
-  global startMarker, endMarker
-  
-  ck = ""
-  x = "z" # any value that is not an end- or startMarker
-  byteCount = -1 # to allow for the fact that the last increment will be one too many
-  
-  # wait for the start character
-  while  ord(x) != startMarker: 
-    x = ser.read()
-  
-  # save data until the end marker is found
-  while ord(x) != endMarker:
-    if ord(x) != startMarker:
-      ck = ck + x.decode("utf-8") 
-      byteCount += 1
-    x = ser.read()
-  
-  return(ck)
-
-
-#============================
-
-def waitForArduino():
-
-   # wait until the Arduino sends 'Arduino Ready' - allows time for Arduino reset
-   # it also ensures that any bytes left over from a previous message are discarded
-   
-    global startMarker, endMarker
-    
-    msg = ""
-    while msg.find("Arduino is ready") == -1:
-
-      while ser.inWaiting() == 0:
-        pass
-        
-      msg = recvFromArduino()
-
-      print(msg)
-     
-      
-#======================================
-
-def runTest(td):
-  numLoops = len(td)
-  waitingForReply = False
-
-  n = 0
-  while n < numLoops:
-
-    teststr = td[n]
-
-    if waitingForReply == False:
-      sendToArduino(teststr)
-      print("Sent from PC -- LOOP NUM " + str(n) + " TEST STR " + teststr)
-      waitingForReply = True
-
-    if waitingForReply == True:
-
-      while ser.inWaiting() == 0:
-        pass
-        
-      dataRecvd = recvFromArduino()
-      print("Reply Received  " + dataRecvd)
-      n += 1
-      waitingForReply = False
-
-      print("===========")
-
-    time.sleep(5)
-
-
-#======================================
-
-# THE DEMO PROGRAM STARTS HERE
-
-#======================================
-
 import serial
 import time
 
+class LiquidHandler():
+
+  def __init__(self, serPort, baudRate):
+    # NOTE the user must ensure that the serial port and baudrate are correct
+    self.serPort = serPort
+    self.baudRate = baudRate
+    self.ser = serial.Serial(serPort, baudRate)
+    print("Serial port " + self.serPort + " opened  Baudrate " + str(self.baudRate))
 
 
-# NOTE the user must ensure that the serial port and baudrate are correct
-serPort = 'COM3'
-baudRate = 9600
-ser = serial.Serial(serPort, baudRate)
-print("Serial port " + serPort + " opened  Baudrate " + str(baudRate))
+    self.startMarker = 60
+    self.endMarker = 62
+    self.waitForArduino()
+  def sendToArduino(self,sendStr):
+    self.ser.write(sendStr.encode('utf-8'))
 
+
+  #======================================
+
+  def recvFromArduino(self):
+    global startMarker, endMarker
+    
+    ck = ""
+    x = "z" # any value that is not an end- or startMarker
+    byteCount = -1 # to allow for the fact that the last increment will be one too many
+    
+    # wait for the start character
+    while  ord(x) != self.startMarker: 
+      x = self.ser.read()
+    
+    # save data until the end marker is found
+    while ord(x) != self.endMarker:
+      if ord(x) != self.startMarker:
+        ck = ck + x.decode("utf-8") 
+        byteCount += 1
+      x = self.ser.read()
+    
+    return(ck)
+
+
+  #============================
+
+  def waitForArduino(self):
+
+    # wait until the Arduino sends 'Arduino Ready' - allows time for Arduino reset
+    # it also ensures that any bytes left over from a previous message are discarded
+    
+      global startMarker, endMarker
+      
+      msg = ""
+      while msg.find("Arduino is ready") == -1:
+
+        while self.ser.inWaiting() == 0:
+          pass
+          
+        msg = self.recvFromArduino()
+
+        print(msg)
+      
+      
+#======================================
+
+  def runTest(self,td):
+    numLoops = len(td)
+    waitingForReply = False
+
+    n = 0
+    while n < numLoops:
+
+      teststr = td[n]
+
+      if waitingForReply == False:
+        self.sendToArduino(teststr)
+        print("Sent from PC -- LOOP NUM " + str(n) + " TEST STR " + teststr)
+        waitingForReply = True
+
+      if waitingForReply == True:
+
+        while self.ser.inWaiting() == 0:
+          pass
+          
+        dataRecvd = self.recvFromArduino()
+        print("Reply Received  " + dataRecvd)
+        n += 1
+        waitingForReply = False
+
+        print("===========")
+
+      time.sleep(5)
+
+liquid = LiquidHandler('COM3',9600)
 
 startMarker = 60
 endMarker = 62
 
-
-waitForArduino()
-
-
 testData = []
-testData.append("<1,200,1>")
-testData.append("<1,800,1>")
-testData.append("<1,800,1>")
-testData.append("<1,200,1>")
-testData.append("<1,200,1>")
+testData.append("<1,2,1>")
+testData.append("<2,2,1>")
+liquid.runTest(testData)
+#time.sleep(5)
+#testData = []
+#testData.append("<2,80,1>")
+#liquid.runTest(testData)
 
-runTest(testData)
-
-
-ser.close
-
+liquid.ser.close()

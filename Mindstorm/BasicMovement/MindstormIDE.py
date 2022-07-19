@@ -1,11 +1,8 @@
-from mindstorms import MSHub, Motor, MotorPair, ColorSensor, DistanceSensor, App
-from mindstorms.control import wait_for_seconds, wait_until, Timer
-from mindstorms.operator import greater_than, greater_than_or_equal_to, less_than, less_than_or_equal_to, equal_to, not_equal_to
+from mindstorms import Motor, Hub
 import math
-from hub import port
 from utime import sleep_ms
 # Create your objects here.
-hub = MSHub()
+hub = Hub()
 
 
 class Arm:
