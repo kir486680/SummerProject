@@ -1,14 +1,15 @@
 import os 
 import math 
 from mindstorms import Motor, Hub
-from ComArduino import LiquidHandler
+import time
+#from ComArduino import LiquidHandler
 
 hub = Hub()
 
 class Arm:
     def __init__(self):
-        #self.gripper = Motor('C')
-        #self.arm = Motor('E') #the highest it goes is  -120
+        self.gripper = hub.port.C.motor
+        self.arm = hub.port.E.motor #the highest it goes is  -120
         self.gripperPos = 0
         self.armPos = 0
         
@@ -22,7 +23,9 @@ class Arm:
         self.arm.run_to_degrees_counted(-290,30)
         self.updateCurrentPosition() 
     def moveUp(self):
-        self.arm.run_to_degrees_counted(45,30) 
+      
+        #self.arm.run_to_degrees_counted(45,30) 
+        self.arm.run_for_degrees(20)
         #self.arm.run_to_degrees_counted(0,30)
         self.updateCurrentPosition()
     def moveTo(self,x):
@@ -54,7 +57,7 @@ class Arm:
  
 class Base:
     def __init__(self):
-        #self.wheels = port.A.motor
+        self.wheels = hub.port.A.motor
         self.wheelsPos = 0
     def setDefault(self):
         self.wheels.preset(self.wheels.get()[0])
@@ -70,7 +73,7 @@ class Base:
         self.wheels.run_to_position(x,speed=50)
     def updateCurrentPosition(self):
         while self.wheels.busy(1):
-            sleep_ms(10)
+            time.sleep(10)
         abs_pos = self.wheels.getPosition()
         print("Absolute Wheels position: " + str(abs_pos))
     def getCurrentPosition(self):
@@ -99,20 +102,20 @@ class Board():
         beaker = self.peripherals[1]
         metalHolder2 = self.peripherals[2]
         self.arm.moveDown()
-        sleep_ms(3000)
+        time.sleep(3000)
         self.arm.arms.grip()
-        sleep_ms(3000)
+        time.sleep(3000)
         self.arm.moveUp()
-        sleep_ms(3000)
+        time.sleep(3000)
         self.base.moveTo(beaker.start)
-        sleep_ms(5000)
+        time.sleep(5000)
         self.arms.moveDown()
-        sleep_ms(3000)
+        time.sleep(3000)
         #perform water logic...
         self.arm.moveUp()
-        sleep_ms(3000)
+        time.sleep(3000)
         self.base.moveTo(self.MetalHolder.findFreeLot())
-        sleep_ms(3000)
+        time.sleep(3000)
         self.arms.moveDown()
         
         pourLiquid()
@@ -170,12 +173,91 @@ class Board():
         def pourLiquid(self,testData):
             ComArduino.runTest(testData)
             
-arm = Arm()
+arms = Arm()
 base = Base()
-board = Board(arm, base)
+board = Board(arms, base)
 
 #board.load_labwear('MetalHolder', location = 5, lotSize = 30)
 #board.load_labwear('Beaker', size = 1, location = 30)
 #board.load_labwear('MetalHolder', location = 5, lotSize = 30)
 #print(board.peripherals[0].coordinates)
 #board.performExperiment("fdf")
+
+
+#arms.setDefault()
+
+debug = False
+
+if debug ==False:
+    
+    #arms.setDefault()
+    #arms.updateCurrentPosition()
+    #base.moveForward()
+    #base.moveToOrigin()
+    #arms.moveUp()
+
+    #arms.moveDown()
+    #time.sleep(2000)
+    #arms.grip()
+    #time.sleep(2000)
+    arms.moveUp()
+    #time.sleep(2000)
+    #base.moveTo(-2200)    2200 for the first lot
+    #time.sleep(6000)
+    #arms.moveDown()
+    #time.sleep(2000)
+    #arms.release()
+    #arms.grip()
+    #time.sleep(2000)
+
+    #base.moveTo(0)
+ 
+    #base.moveTo(0)
+    #print("Final pos " + str(arms.armPos))
+    #arms.release()
+    #time.sleep(2000)
+    #arms.grip()
+    
+    #arms.releaseIntoBeaker()
+    #time.sleep(2000)
+    #arms.moveUp()
+    #time.sleep(2000)
+    #base.moveToOrigin()
+    #arms.grip()
+    #time.sleep(2000)
+    #arms.release()
+else:
+    arms.moveDown()
+    time.sleep(3000)
+    arms.grip()
+    time.sleep(3000)
+    arms.moveUp()
+    time.sleep(3000)
+    base.moveTo(-1300)
+    time.sleep(5000)
+    arms.moveDown()
+    time.sleep(3000)
+    arms.release()
+
+    time.sleep(4000)
+
+    ##Second
+    arms.moveUp()
+    time.sleep(3000)
+    base.moveTo(-300)
+    time.sleep(3000)
+    arms.moveDown()
+    time.sleep(3000)
+    arms.grip()
+    time.sleep(3000)
+    arms.moveUp()
+    time.sleep(3000)
+    base.moveTo(-1460)
+    time.sleep(3000)
+    arms.moveDown()
+    time.sleep(3000)
+    arms.release()
+    time.sleep(3000)
+    arms.moveUp()
+    time.sleep(3000)
+    base.moveTo(0)
