@@ -2,10 +2,10 @@ import os
 import math 
 from mindstorms import Motor, Hub
 import time
-#from ComArduino import LiquidHandler
+from ComArduino import LiquidHandler
 
 hub = Hub()
-
+time.sleep(1)
 class Arm:
     def __init__(self):
         self.gripper = hub.port.C.motor
@@ -20,26 +20,26 @@ class Arm:
         self.updateCurrentPosition()
     def moveDown(self): # the desired delta is 350
         #self.arm.run_to_position(180, 'counterclockwise', 30) #-400 acceptable
-        self.arm.run_to_degrees_counted(-290,30)
-        self.updateCurrentPosition() 
+        self.arm.run_for_degrees(310, speed=-30)
+        #self.updateCurrentPosition() 
     def moveUp(self):
       
         #self.arm.run_to_degrees_counted(45,30) 
-        self.arm.run_for_degrees(20)
+        self.arm.run_for_degrees(-310, speed=30)
         #self.arm.run_to_degrees_counted(0,30)
-        self.updateCurrentPosition()
+        #self.updateCurrentPosition()
     def moveTo(self,x):
         self.arm.run_to_degrees_counted(x,30)
         #self.arm.run_to_degrees_counted(0,30)
         self.updateCurrentPosition()
     def grip(self):#delta is -10
-        self.gripper.run_to_position(78,speed=50)
-        #self.gripper.run_to_degrees_counted(0,30)
-        self.updateCurrentPosition()
+        #self.gripper.run_to_position(78,speed=50)
+        self.gripper.run_for_degrees(40,30)
+        #self.updateCurrentPosition()
     def release(self):
-        self.gripper.run_to_position(93,speed=50)
-        #self.gripper.run_to_degrees_counted(8,30)
-        self.updateCurrentPosition()
+        #self.gripper.run_to_position(93,speed=50)
+        self.gripper.run_for_degrees(-30,-30)
+        #self.updateCurrentPosition()
     def releaseIntoBeaker(self):
         #self.gripper.run_to_position(205,speed=50)
         self.gripper.run_to_degrees_counted(25,30)
@@ -176,7 +176,11 @@ class Board():
 arms = Arm()
 base = Base()
 board = Board(arms, base)
+liquid = LiquidHandler('COM3',9600)
 
+testData = []
+testData.append("<1,2,1>")
+testData.append("<2,2,1>")
 #board.load_labwear('MetalHolder', location = 5, lotSize = 30)
 #board.load_labwear('Beaker', size = 1, location = 30)
 #board.load_labwear('MetalHolder', location = 5, lotSize = 30)
@@ -190,28 +194,51 @@ debug = False
 
 if debug ==False:
     
+
+   
+
+    #liquid.runTest(testData)
+    #testData = []
+    #testData.append("<1,2,1>")
+    #testData.append("<2,2,1>")
+    #liquid.runTest(testData)
     #arms.setDefault()
     #arms.updateCurrentPosition()
     #base.moveForward()
     #base.moveToOrigin()
     #arms.moveUp()
-
-    #arms.moveDown()
-    #time.sleep(2000)
-    #arms.grip()
-    #time.sleep(2000)
+    
+    arms.release()
+    time.sleep(2)
+    arms.grip()
+    #liquid.runTest(testData)
     arms.moveUp()
-    #time.sleep(2000)
-    #base.moveTo(-2200)    2200 for the first lot
-    #time.sleep(6000)
-    #arms.moveDown()
-    #time.sleep(2000)
+    """
+    arms.release()
+    time.sleep(2)
+    arms.moveDown()
+    time.sleep(2)
+    arms.grip()
+    time.sleep(2)
+    arms.moveUp()
+    time.sleep(2)
+    base.moveTo(-1400)    #2200 for the first lot
+    time.sleep(3)
+    arms.moveDown()
+    time.sleep(2)
+    liquid.runTest(testData)
     #arms.release()
     #arms.grip()
-    #time.sleep(2000)
-
-    #base.moveTo(0)
- 
+    time.sleep(2)
+    arms.moveUp()
+    time.sleep(2)
+    base.moveTo(-2080)
+    time.sleep(2)
+    arms.moveDown()
+    time.sleep(2)
+    arms.release()
+    arms.moveUp()
+ """
     #base.moveTo(0)
     #print("Final pos " + str(arms.armPos))
     #arms.release()

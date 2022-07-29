@@ -69,10 +69,11 @@ void loop() {
   //
   flashLEDs();
 
-  if(!done){
+  if(done == false && motorNum != NULL ){
     motorNum = 2;
     amountPump = 30;
     pumpMotor();
+    Serial.println("First Motor Done");
     //amountPump = 0;
     motorNum = 1;
     pumpMotor();

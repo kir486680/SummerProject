@@ -15,7 +15,7 @@ def main():
     device = find_device()
     board = Pyboard(device)
     board.enter_raw_repl()
-    print(board.exec_("import hub;print(hub.port.A.info())"))
+    print(board.exec_("import hub;print(hub.info())"))
 
 if __name__ == '__main__':
     main()

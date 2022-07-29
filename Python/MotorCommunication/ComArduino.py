@@ -150,29 +150,29 @@ def runTest(td):
 
 
 # NOTE the user must ensure that the serial port and baudrate are correct
-serPort = 'COM3'
-baudRate = 9600
-ser = serial.Serial(serPort, baudRate)
-print("Serial port " + serPort + " opened  Baudrate " + str(baudRate))
+#serPort = 'COM3'
+#baudRate = 9600
+#ser = serial.Serial(serPort, baudRate)
+#print("Serial port " + serPort + " opened  Baudrate " + str(baudRate))
 
 
 startMarker = 60
 endMarker = 62
 
 
-waitForArduino()
+#waitForArduino()
 
 
-testData = []
-testData.append("<1,200,1>")
-testData.append("<1,800,1>")
-testData.append("<1,800,1>")
-testData.append("<1,200,1>")
-testData.append("<1,200,1>")
+#testData = []
+#testData.append("<1,200,1>")
+#testData.append("<1,800,1>")
+#testData.append("<1,800,1>")
+#testData.append("<1,200,1>")
+#testData.append("<1,200,1>")
 
-runTest(testData)
+#runTest(testData)
 
 
-ser.close
+#ser.close
 
 
