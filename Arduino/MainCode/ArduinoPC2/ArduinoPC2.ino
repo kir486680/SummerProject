@@ -14,7 +14,7 @@ int enB = 3;
 int motorNum;
 float amountPump;
 int motorSpeed;
-boolean done = true;
+boolean done = true; // flag when there are any new commands passed from the computer
 
 const byte numLEDs = 2;
 byte ledPin[numLEDs] = {12, 13};
@@ -75,26 +75,11 @@ void setup() {
 void loop() {
   curMillis = millis();
   getDataFromPC();
-  //updateFlashInterval();
   replyToPC();
-  //
   flashLEDs();
   if(done == false){
     pumpMotor();
   }
-  
-
-  
-    //motorNum = 2;
-    //amountPump = 30;
-   
-   
-    //Serial.println("First Motor Done");
-    //amountPump = 0;
-    //motorNum = 1;
-    //pumpMotor();
-    //done = true;
-    //motorNum = NULL;
   
 }
 
