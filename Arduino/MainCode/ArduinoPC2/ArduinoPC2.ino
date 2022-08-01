@@ -1,3 +1,7 @@
+#include <cQueue.h>
+
+#define  IMPLEMENTATION  FIFO
+
 //define motors
 int motor1pin1 = 8;
 int motor1pin2 = 7;
@@ -37,6 +41,13 @@ unsigned long curMillis;
 unsigned long prevReplyToPCmillis = 0;
 unsigned long replyToPCinterval = 1000;
 
+
+typedef struct strRec {
+  int  entry1; // motor number
+  float  entry2; // pump amount 
+  int  entry3; // motor speed
+} Rec;
+Queue_t   q;  // Queue declaration
 //=============
 
 void setup() {
@@ -68,19 +79,23 @@ void loop() {
   replyToPC();
   //
   flashLEDs();
-
-  if(done == false && motorNum != NULL ){
-    motorNum = 2;
-    amountPump = 30;
+  if(q_getCount(&q)!=0){
     pumpMotor();
-    Serial.println("First Motor Done");
-    //amountPump = 0;
-    motorNum = 1;
-    pumpMotor();
-    done = true;
   }
+  
 
-  Serial.println("ENd of the loop ");
+  
+    //motorNum = 2;
+    //amountPump = 30;
+   
+   
+    //Serial.println("First Motor Done");
+    //amountPump = 0;
+    //motorNum = 1;
+    //pumpMotor();
+    //done = true;
+    //motorNum = NULL;
+  
 }
 
 //=============
@@ -133,23 +148,28 @@ void parseData() {
   
   strtokIndx = strtok(NULL, ","); 
   motorSpeed = atoi(strtokIndx);     // convert this part to a float
-
+  Rec rec;
+  rec.entry1 = motorNum;
+  rec.entry2 = amountPump;
+  rec.entry3 = motorSpeed;
+  q_push(&q, &rec);
 }
 
 //=============
 
 void replyToPC() {
-
+  Rec rec;
+  q_peek(&q, &rec);
   if (newDataFromPC) {
     newDataFromPC = false;
     Serial.print("<Msg ");
     Serial.print(messageFromPC);
     Serial.print(" MotrorNum ");
-    Serial.print(motorNum);
+    Serial.print(rec.entry1);
     Serial.print(" Amount Pump ");
-    Serial.print(amountPump);
+    Serial.print(rec.entry1);
     Serial.print(" Motor Speed  ");
-    Serial.print(motorSpeed);
+    Serial.print(rec.entry1);
     Serial.print(" Time ");
     Serial.print(curMillis >> 9); // divide by 512 is approx = half-seconds
     Serial.println(">");
@@ -205,7 +225,12 @@ void flashLEDs() {
 //=============
 
 void pumpMotor(){
-
+  Rec rec;
+  q_pop(&q, &rec);
+  int motorNum = rec.entry1;
+  float amountPump = rec.entry2;
+  int motorSpeed = rec.entry3;
+  
   if(motorNum == 1){
     analogWrite(enA, 255);
     digitalWrite(motor1pin1, HIGH);

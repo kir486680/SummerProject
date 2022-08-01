@@ -20,12 +20,12 @@ class Arm:
         self.updateCurrentPosition()
     def moveDown(self): # the desired delta is 350
         #self.arm.run_to_position(180, 'counterclockwise', 30) #-400 acceptable
-        self.arm.run_for_degrees(265, speed=-30)
+        self.arm.run_for_degrees(220, speed=-30)
         #self.updateCurrentPosition() 
     def moveUp(self):
       
         #self.arm.run_to_degrees_counted(45,30) 
-        self.arm.run_for_degrees(-265, speed=30)
+        self.arm.run_for_degrees(-225, speed=30)
         #self.arm.run_to_degrees_counted(0,30)
         #self.updateCurrentPosition()
     def moveTo(self,x):
@@ -216,10 +216,11 @@ if debug ==False:
     #arms.moveUp()
     #arms.grip()
     #arms.release()
-    base.moveTo(-2000)
-    time.sleep(5)
-    base.moveTo(-100)
+    #base.moveTo(-2000)
+    #time.sleep(5)
+    #base.moveTo(-100)
     #time.sleep(2)
+
     #Testing going down and up
     #arms.moveDown()
     #time.sleep(2)
@@ -238,7 +239,7 @@ if debug ==False:
     #arms.grip()
     #liquid.runTest(testData)
     #arms.moveUp()
-    """
+    
     arms.release()
     time.sleep(2)
     arms.moveDown()
@@ -279,13 +280,13 @@ if debug ==False:
     time.sleep(2)
     arms.moveUp()
     time.sleep(2)
-    base.moveTo(-2080)
+    base.moveTo(-2300)
     time.sleep(2)
     arms.moveDown()
     time.sleep(2)
     arms.release()
     arms.moveUp()
-    """
+    
 else:
     arms.moveDown()
     time.sleep(3000)
