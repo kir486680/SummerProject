@@ -158,5 +158,9 @@ testData = []
 testData.append("<1,20,1>")
 testData.append("<2,20,1>")
 print("here")
-liquid.runTest(testData) 
+liquid.runTest(testData)
+testData = [] 
+testData.append("<1,20,1>")
+testData.append("<2,20,1>")
+liquid.runTest(testData)
 #liquid.ser.close()
