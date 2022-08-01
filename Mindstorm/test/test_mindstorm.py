@@ -17,13 +17,13 @@ def test_brain_status():
     board.enter_raw_repl()
     assert board.exec_("import hub;print(hub.info())").decode() != None
     
-def test_motor_status():
+def test_motor_status(motorNum):
     device = find_device()
     board = Pyboard(device)
     board.enter_raw_repl()
-    assert board.exec_("import hub; import time;time.sleep(1); print(hub.port.A.motor)").decode() != None
+    assert board.exec_("import hub; import time;time.sleep(1); print(hub.port.{}.motor)".format(motorNum)).decode() != None
 
 
 
 test_brain_status()
-test_motor_status()
+test_motor_status("B")
