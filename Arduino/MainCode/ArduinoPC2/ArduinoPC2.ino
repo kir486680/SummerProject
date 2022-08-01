@@ -14,7 +14,7 @@ int enB = 3;
 int motorNum;
 float amountPump;
 int motorSpeed;
-boolean done = false;
+boolean done = true;
 
 const byte numLEDs = 2;
 byte ledPin[numLEDs] = {12, 13};
@@ -79,7 +79,7 @@ void loop() {
   replyToPC();
   //
   flashLEDs();
-  if(q_getCount(&q)!=0){
+  if(done == false){
     pumpMotor();
   }
   
@@ -158,21 +158,26 @@ void parseData() {
 //=============
 
 void replyToPC() {
-  Rec rec;
-  q_peek(&q, &rec);
+
   if (newDataFromPC) {
     newDataFromPC = false;
     Serial.print("<Msg ");
     Serial.print(messageFromPC);
+    Serial.print(" Queue size ");
+    Serial.print(q_nbRecs(&q)); // divide by 512 is approx = half-seconds  
+    Rec rec;
+    q_peek(&q, &rec);
     Serial.print(" MotrorNum ");
     Serial.print(rec.entry1);
     Serial.print(" Amount Pump ");
-    Serial.print(rec.entry1);
+    Serial.print(rec.entry2);
     Serial.print(" Motor Speed  ");
-    Serial.print(rec.entry1);
+    Serial.print(rec.entry3);
     Serial.print(" Time ");
     Serial.print(curMillis >> 9); // divide by 512 is approx = half-seconds
+  
     Serial.println(">");
+    done = false;
   }
 }
 
@@ -230,7 +235,7 @@ void pumpMotor(){
   int motorNum = rec.entry1;
   float amountPump = rec.entry2;
   int motorSpeed = rec.entry3;
-  
+
   if(motorNum == 1){
     analogWrite(enA, 255);
     digitalWrite(motor1pin1, HIGH);
@@ -248,4 +253,5 @@ void pumpMotor(){
     digitalWrite(motor2pin1, LOW);
     digitalWrite(motor2pin2, LOW);
   }
+  done = true;
 }
