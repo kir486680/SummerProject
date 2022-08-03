@@ -90,7 +90,7 @@ class Board():
     def status(self):
         self.arms.getCurrentPosition()
         self.base.getCurrentPosition()
-    def load_labwear(self, name, locationStart=0, numLots = 3, lotSize = 300, taken = [],size = 0):
+    def load_labwear(self, name, locationStart=0, numLots = 3, lotSize = 300, taken = [0,0,0],size = 0):
     #fix this the following way https://stackoverflow.com/questions/5079609/methods-with-the-same-name-in-one-class-in-python
         if name == 'MetalHolder':
             metalHolder = self.MetalHolder(locationStart, numLots, taken = taken, lotSize = -lotSize) # generate an empty array of 0 be default
@@ -108,7 +108,7 @@ class Board():
         if np.count_nonzero(metalHolder1.taken) <= np.count_nonzero(np.array(metalHolder2.taken)==0):
             for i in range(len(np.count_nonzero(metalHolder1.taken))):
                 #this is always true for the picking up 1 part
-                lotIdx = metalHolder1.findFreeLot()
+                lotIdx = metalHolder1.findTaken()
                 self.base.moveTo(lotIdx) 
                 self.arms.moveDown() 
                 arms.grip()
@@ -142,33 +142,38 @@ class Board():
     class MetalHolder():
 
         
-        def __init__(self, locationStart, numLots, taken = [], lotSize = -300):
+        def __init__(self, locationStart, numLots, taken, lotSize = -300):
             self.start = locationStart
             self.numLots = numLots
             self.lotSize = lotSize
             self.coordinates = []
             self.generateLocation(locationStart) # array of x and y coordiates of the spots in the holder
             self.taken = taken # array of taken spots of the holder
-            print(self.coordinates)
-            
+          
+
         def updateLot(self, idx, status=1):
-            taken[idx] = status
-        def status():
+            self.taken[idx] = status
+        def status(self):
             for x,status in zip([x for x,y in self.coordinates], self.taken):
                 print("The point with coordinates " + str(x) + " has status " + str(status))
-        def findFreeLot():
+        #Finds the part where there is no metal piece and swtiches it to taken
+        def findFreeLot(self):
             for count, coord in enumerate(self.coordinates):
+                print(count)
+                print(self.taken)
                 if not self.taken[count]:
-                    x, y = coordinates
-                    updateLot(count)
+                    x, y = coord
+                    self.updateLot(count)
                     return x
             return None
-        def findTaken():
+        #Finds the part where there is already a metal piece and switeches it to free
+        def findTaken(self):
             for count, coord in enumerate(self.coordinates):
                 if self.taken[count]:
-                    x, y = coordinates
-                    updateLot(count,0)
+                    x, y = coord
+                    self.updateLot(count,0)
                     return x
+            return None
         def generateLocation(self, start):            
             y = 0
             x = start
@@ -186,6 +191,7 @@ board = Board(arms, base)
 
 #testData.append("<2,20,1>")
 board.load_labwear('MetalHolder')
+
 #board.load_labwear('Beaker', size = 1, location = 30)
 #board.load_labwear('MetalHolder', location = 5, lotSize = 30)
 #print(board.peripherals[0].coordinates)
