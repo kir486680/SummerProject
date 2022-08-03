@@ -167,21 +167,16 @@ class Board():
                 print(i, self.lotSize)
                 x += self.lotSize
                 self.coordinates.append([x,y])
-    class LiquidHandler():
-        def __init__(self):
-            pass 
-        def pourLiquid(self,testData):
-            ComArduino.runTest(testData)
+
             
 arms = Arm()
 base = Base()
 board = Board(arms, base)
-liquid = LiquidHandler('COM3',9600)
+#liquid = LiquidHandler('COM3',9600)
 
-testData = []
-testData.append("<1,50,1>")
+
 #testData.append("<2,20,1>")
-#board.load_labwear('MetalHolder', location = 5, lotSize = 30)
+board.load_labwear('MetalHolder', location = 5, lotSize = 3)
 #board.load_labwear('Beaker', size = 1, location = 30)
 #board.load_labwear('MetalHolder', location = 5, lotSize = 30)
 #print(board.peripherals[0].coordinates)
@@ -240,7 +235,7 @@ if debug ==False:
     #liquid.runTest(testData)
     #arms.moveUp()
     
-    liquid.runTest(testData)
+   
     """
     
     time.sleep(2)
