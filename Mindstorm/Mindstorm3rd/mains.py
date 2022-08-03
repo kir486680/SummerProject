@@ -89,36 +89,17 @@ class Board():
     def status(self):
         self.arms.getCurrentPosition()
         self.base.getCurrentPosition()
-    def load_labwear(self, name, location, numLots = 5, lotSize = None, taken = [],size = 0):
+    def load_labwear(self, name, locationStart=0, numLots = 3, lotSize = 300, taken = [],size = 0):
     #fix this the following way https://stackoverflow.com/questions/5079609/methods-with-the-same-name-in-one-class-in-python
         if name == 'MetalHolder':
-            metalHolder = self.MetalHolder(location, numLots, lotSize, taken) # generate an empty array of 0 be default
+            metalHolder = self.MetalHolder(locationStart, numLots, taken = taken, lotSize = -lotSize) # generate an empty array of 0 be default
             self.peripherals.append(metalHolder)
         if name == 'Beaker':
-            beaker = self.Beaker(size, location)
+            beaker = self.Beaker(size, locationStart)
             self.peripherals.append(beaker)
     def performExperiment(self, name):
-        metalHolder1 = self.peripherals[0]
-        beaker = self.peripherals[1]
-        metalHolder2 = self.peripherals[2]
-        self.arm.moveDown()
-        time.sleep(3000)
-        self.arm.arms.grip()
-        time.sleep(3000)
-        self.arm.moveUp()
-        time.sleep(3000)
-        self.base.moveTo(beaker.start)
-        time.sleep(5000)
-        self.arms.moveDown()
-        time.sleep(3000)
-        #perform water logic...
-        self.arm.moveUp()
-        time.sleep(3000)
-        self.base.moveTo(self.MetalHolder.findFreeLot())
-        time.sleep(3000)
-        self.arms.moveDown()
-        
-        pourLiquid()
+        pass
+
 
     class Beaker():
         sizeOptions = [[30,40], [50,60]] #comes in as [height, radius]
@@ -133,14 +114,14 @@ class Board():
     class MetalHolder():
 
         
-        def __init__(self, start, numLots, lotSize, taken):
-            self.start = start
+        def __init__(self, locationStart, numLots, taken = [], lotSize = -300):
+            self.start = locationStart
             self.numLots = numLots
             self.lotSize = lotSize
             self.coordinates = []
-            self.generateLocation(start) # array of x and y coordiates of the spots in the holder
+            self.generateLocation(locationStart) # array of x and y coordiates of the spots in the holder
             self.taken = taken # array of taken spots of the holder
-
+            print(self.coordinates)
             
         def updateLot(self, idx, status=1):
             taken[idx] = status
@@ -176,7 +157,7 @@ board = Board(arms, base)
 
 
 #testData.append("<2,20,1>")
-board.load_labwear('MetalHolder', location = 5, lotSize = 3)
+board.load_labwear('MetalHolder')
 #board.load_labwear('Beaker', size = 1, location = 30)
 #board.load_labwear('MetalHolder', location = 5, lotSize = 30)
 #print(board.peripherals[0].coordinates)
