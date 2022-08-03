@@ -3,6 +3,7 @@ import math
 from mindstorms import Motor, Hub
 import time
 from ComArduino import LiquidHandler
+import numpy as np
 
 hub = Hub()
 time.sleep(1)
@@ -97,9 +98,36 @@ class Board():
         if name == 'Beaker':
             beaker = self.Beaker(size, locationStart)
             self.peripherals.append(beaker)
-    def performExperiment(self, name):
-        pass
 
+    def encoder():
+        #assume that first is the metal holder, second beaker, and third metal holder
+        metalHolder1 = self.peripherals[0]
+        beaker = self.peripherals[1]
+        metalHolder2 = self.peripherals[2]
+        #check if there is enough space for metal pieces from holder1 in holder2 
+        if np.count_nonzero(metalHolder1.taken) <= np.count_nonzero(np.array(metalHolder2.taken)==0):
+            for i in range(len(np.count_nonzero(metalHolder1.taken))):
+                #this is always true for the picking up 1 part
+                lotIdx = metalHolder1.findFreeLot()
+                self.base.moveTo(lotIdx) 
+                self.arms.moveDown() 
+                arms.grip()
+                arms.moveUp()
+                #end of pickup 
+                #moving to the beaker
+                self.base.moveTo(beaker.start)
+                self.moveDown()
+                self.moveDown()
+                #end of beakerDip
+                #this is always true for releaseing 1 part 
+                lotIdx = metalHolder2.findFreeLot()
+                self.base.moveTo(lotIdx) 
+                self.arms.moveDown() 
+                arms.release()
+                arms.moveUp()
+                #end of release
+        else:
+            print("The number of metals you are trying to transport is too big")
 
     class Beaker():
         sizeOptions = [[30,40], [50,60]] #comes in as [height, radius]
