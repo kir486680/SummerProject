@@ -179,8 +179,8 @@ board = Board(arms, base)
 liquid = LiquidHandler('COM3',9600)
 
 testData = []
-testData.append("<1,2,1>")
-testData.append("<2,2,1>")
+testData.append("<1,50,1>")
+#testData.append("<2,20,1>")
 #board.load_labwear('MetalHolder', location = 5, lotSize = 30)
 #board.load_labwear('Beaker', size = 1, location = 30)
 #board.load_labwear('MetalHolder', location = 5, lotSize = 30)
@@ -240,7 +240,9 @@ if debug ==False:
     #liquid.runTest(testData)
     #arms.moveUp()
     
-    arms.release()
+    liquid.runTest(testData)
+    """
+    
     time.sleep(2)
     arms.moveDown()
     time.sleep(2)
@@ -250,10 +252,10 @@ if debug ==False:
     time.sleep(2)
     base.moveTo(-1400)    #2200 for the first lot
     time.sleep(3)
-    #liquid.runTest(testData)
     arms.moveDown()
     time.sleep(2)
-    time.sleep(2)
+    liquid.runTest(testData)
+    time.sleep(10)
     arms.moveUp()
     time.sleep(2)
     base.moveTo(-2080)
@@ -273,10 +275,10 @@ if debug ==False:
     arms.moveUp()
     time.sleep(2)
     base.moveTo(-1400)    #2200 for the first lot
-    time.sleep(3)
-    #liquid.runTest(testData)
+    time.sleep(10)
     arms.moveDown()
     time.sleep(2)
+    liquid.runTest(testData)
     time.sleep(2)
     arms.moveUp()
     time.sleep(2)
@@ -286,7 +288,7 @@ if debug ==False:
     time.sleep(2)
     arms.release()
     arms.moveUp()
-    
+    """
 else:
     arms.moveDown()
     time.sleep(3000)

@@ -149,18 +149,5 @@ class LiquidHandler():
 
       time.sleep(5)
 
-liquid = LiquidHandler('COM3',9600)
 
-#startMarker = 60
-#endMarker = 62
-
-testData = []
-testData.append("<1,20,1>")
-testData.append("<2,20,1>")
-print("here")
-liquid.runTest(testData)
-testData = [] 
-testData.append("<1,20,1>")
-testData.append("<2,20,1>")
-liquid.runTest(testData)
 #liquid.ser.close()
