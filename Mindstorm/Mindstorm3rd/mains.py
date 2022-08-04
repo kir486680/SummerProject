@@ -107,25 +107,41 @@ class Board():
         #check if there is enough space for metal pieces from holder1 in holder2 
         if np.count_nonzero(metalHolder1.taken) <= np.count_nonzero(np.array(metalHolder2.taken)==0):
             for i in range(len(np.count_nonzero(metalHolder1.taken))):
-                #this is always true for the picking up 1 part
-                lotIdx = metalHolder1.findTaken()
-                self.base.moveTo(lotIdx) 
-                self.arms.moveDown() 
-                arms.grip()
-                arms.moveUp()
-                #end of pickup 
-                #moving to the beaker
-                self.base.moveTo(beaker.start)
-                self.moveDown()
-                self.moveDown()
-                #end of beakerDip
-                #this is always true for releaseing 1 part 
-                lotIdx = metalHolder2.findFreeLot()
-                self.base.moveTo(lotIdx) 
-                self.arms.moveDown() 
-                arms.release()
-                arms.moveUp()
-                #end of release
+                
+                while True:
+                    lotIdx1 = metalHolder1.findTaken()
+                    lotIdx2 = metalHolder2.findFreeLot()
+                    if lotIdx1 is not None and lotIdx2 is not None:
+                        self.base.moveTo(lotIdx1) 
+                        time.sleep(2)
+                        self.arms.moveDown() 
+                        time.sleep(2)
+                        arms.grip()
+                        time.sleep(2)
+                        arms.moveUp()
+                        time.sleep(2)
+                         #end of pickup 
+                        #moving to the beaker
+                        
+                        self.base.moveTo(beaker.start)
+                        time.sleep(2)
+                        self.moveDown()
+                        #Water logic should be performed here
+                        time.sleep(2)
+                        self.moveUp()
+                        time.sleep(2)
+                        #end of beakerDip
+                        #this is always true for releaseing 1 part 
+
+                        self.base.moveTo(lotIdx2) 
+                        time.sleep(2)
+                        self.arms.moveDown() 
+                        time.sleep(2)
+                        self.arms.release()
+                        time.sleep(2)
+                        self.arms.moveUp()
+                        time.sleep(2)
+                        #end of release
         else:
             print("The number of metals you are trying to transport is too big")
 
