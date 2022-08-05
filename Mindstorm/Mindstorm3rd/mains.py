@@ -84,7 +84,7 @@ class Base:
 class Board():
     def __init__(self, arm, base):
         
-        self.arm = arm
+        self.arms = arm
         self.base = base
         self.peripherals = []
     def status(self):
@@ -99,14 +99,14 @@ class Board():
             beaker = self.Beaker(size, locationStart)
             self.peripherals.append(beaker)
 
-    def encoder():
+    def encoder(self):
         #assume that first is the metal holder, second beaker, and third metal holder
         metalHolder1 = self.peripherals[0]
         beaker = self.peripherals[1]
         metalHolder2 = self.peripherals[2]
         #check if there is enough space for metal pieces from holder1 in holder2 
         if np.count_nonzero(metalHolder1.taken) <= np.count_nonzero(np.array(metalHolder2.taken)==0):
-            for i in range(len(np.count_nonzero(metalHolder1.taken))):
+            for i in range(np.count_nonzero(metalHolder1.taken)):
                 
                 while True:
                     lotIdx1 = metalHolder1.findTaken()
@@ -116,19 +116,19 @@ class Board():
                         time.sleep(2)
                         self.arms.moveDown() 
                         time.sleep(2)
-                        arms.grip()
+                        self.arms.grip()
                         time.sleep(2)
-                        arms.moveUp()
+                        self.arms.moveUp()
                         time.sleep(2)
                          #end of pickup 
                         #moving to the beaker
                         
                         self.base.moveTo(beaker.start)
                         time.sleep(2)
-                        self.moveDown()
+                        self.arms.moveDown()
                         #Water logic should be performed here
                         time.sleep(2)
-                        self.moveUp()
+                        self.arms.moveUp()
                         time.sleep(2)
                         #end of beakerDip
                         #this is always true for releaseing 1 part 
@@ -193,10 +193,11 @@ class Board():
         def generateLocation(self, start):            
             y = 0
             x = start
-            for i in range(self.numLots):
-                print(i, self.lotSize)
+            self.coordinates.append([x,y])
+            for i in range(self.numLots-1):
                 x += self.lotSize
                 self.coordinates.append([x,y])
+            print(self.coordinates)
 
             
 arms = Arm()
@@ -206,14 +207,13 @@ board = Board(arms, base)
 
 
 #testData.append("<2,20,1>")
-board.load_labwear('MetalHolder')
-
-#board.load_labwear('Beaker', size = 1, location = 30)
-#board.load_labwear('MetalHolder', location = 5, lotSize = 30)
+board.load_labwear('MetalHolder', taken = [1,1,0])
+board.load_labwear('Beaker', size = 1, locationStart = -1400)
+board.load_labwear('MetalHolder', locationStart = -2000)
 #print(board.peripherals[0].coordinates)
 #board.performExperiment("fdf")
 
-
+board.encoder()
 #arms.setDefault()
 
 debug = False
